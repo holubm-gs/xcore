@@ -51,7 +51,7 @@ open class HUD: Appliable {
     }
 
     public init() {
-        if let windowScene = UIApplication.sharedOrNil?.firstWindowScene {
+        if let windowScene = UIApplication.sharedOrNil?.firstWindowScene() {
             window = UIWindow(windowScene: windowScene)
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
@@ -116,7 +116,7 @@ open class HUD: Appliable {
             case .style(let value):
                 viewController.statusBarStyle = value
             case .inherit:
-                let value = UIApplication.sharedOrNil?.firstSceneKeyWindow?.topViewController?.preferredStatusBarStyle
+                let value = UIApplication.sharedOrNil?.firstSceneKeyWindow()?.topViewController?.preferredStatusBarStyle
                 viewController.statusBarStyle = value ?? .default
         }
     }
