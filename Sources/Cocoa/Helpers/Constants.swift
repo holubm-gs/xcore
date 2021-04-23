@@ -133,21 +133,6 @@ public enum AppConstants {
             .windowScene?
             .statusBarManager?
             .statusBarFrame.height ?? 44.0 // TODO: 44 is outdated. have some logic to determine device and correct height?
-
-        // On some situations we need the bar height even when no scene is active
-        // (e.g when showing biometric screen). In those situations we resort
-        // to not filtering for an active scene.
-        guard let firstSceneWindow =
-                UIApplication.sharedOrNil?.firstSceneKeyWindow() ??
-                UIApplication.sharedOrNil?.firstSceneKeyWindow(activeScene: false)
-        else {
-            return 44 // TODO: 44 is outdated. have some logic to determine device and correct height?
-        }
-
-        return firstSceneWindow
-            .windowScene?
-            .statusBarManager?
-            .statusBarFrame.height ?? 44
     }
 
     public static var statusBarPlusNavBarHeight: CGFloat {
