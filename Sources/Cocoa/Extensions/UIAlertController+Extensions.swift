@@ -35,7 +35,7 @@ func alert(title: String = "", message: String = "") {
 
 extension UIAlertController {
     open func show(presentingViewController: UIViewController? = nil) {
-        guard let presentingViewController = presentingViewController ?? UIApplication.sharedOrNil?.firstSceneKeyWindow()?.topViewController else {
+        guard let presentingViewController = presentingViewController ?? UIApplication.sharedOrNil?.firstSceneKeyWindow?.topViewController else {
             return
         }
 

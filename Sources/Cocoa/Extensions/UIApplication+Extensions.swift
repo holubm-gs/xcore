@@ -69,7 +69,7 @@ extension UIApplication {
 // MARK: - TopViewController
 
 extension UIApplication {
-    open class func topViewController(_ base: UIViewController? = UIApplication.sharedOrNil?.firstSceneKeyWindow()?.rootViewController) -> UIViewController? {
+    open class func topViewController(_ base: UIViewController? = UIApplication.sharedOrNil?.firstSceneKeyWindow?.rootViewController) -> UIViewController? {
         if let nav = base as? UINavigationController {
             return topViewController(nav.visibleViewController)
         }
@@ -135,8 +135,8 @@ extension UIApplication {
     ///
     /// - Returns: Returns an optional window object based on attributes options.
     /// - Complexity: O(_n_), where _n_ is the length of the `windows` array.
-    public func sceneWindow(_ keyPaths: KeyPath<UIWindow, Bool>..., activeScene: Bool = true) -> UIWindow? {
-        firstWindowScene(activeScene: activeScene)?
+    public func sceneWindow(_ keyPaths: KeyPath<UIWindow, Bool>...) -> UIWindow? {
+        firstWindowScene?
             .windows
             .lazy
             .reversed()
@@ -144,15 +144,15 @@ extension UIApplication {
     }
 
     /// Returns the app's first currently active scene's first key window.
-    public func firstSceneKeyWindow(activeScene: Bool = true) -> UIWindow? {
-        sceneWindow(\.isKeyWindow, activeScene: activeScene)
+    public var firstSceneKeyWindow: UIWindow? {
+        sceneWindow(\.isKeyWindow)
     }
 
     /// Returns the app's first currently active window scene.
-    public func firstWindowScene(activeScene: Bool = true) -> UIWindowScene? {
+    public var firstWindowScene: UIWindowScene? {
         connectedScenes
             .lazy
-            .filter { activeScene ? $0.activationState == .foregroundActive : true}
+            .filter { $0.activationState == .foregroundActive }
             .compactMap { $0 as? UIWindowScene }
             .first
     }

@@ -119,6 +119,22 @@ public enum AppConstants {
 
     public static var statusBarHeight: CGFloat {
         // On some situations we need the bar height even when no scene is active
+        // (e.g when showing biometric screen). Therefore, we can't rely on
+        // firstSceneKeyWindow() on this situation
+        let window =
+            UIApplication
+            .sharedOrNil?
+            .windows
+            .filter { $0.isKeyWindow }
+            .first
+
+        return
+            window?
+            .windowScene?
+            .statusBarManager?
+            .statusBarFrame.height ?? 44.0 // TODO: 44 is outdated. have some logic to determine device and correct height?
+
+        // On some situations we need the bar height even when no scene is active
         // (e.g when showing biometric screen). In those situations we resort
         // to not filtering for an active scene.
         guard let firstSceneWindow =
