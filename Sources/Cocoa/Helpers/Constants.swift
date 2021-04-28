@@ -118,12 +118,21 @@ public enum AppConstants {
     public static var φ: CGFloat { 0.618 }
 
     public static var statusBarHeight: CGFloat {
-        UIApplication
+        // On some situations we need the bar height even when no scene is active
+        // (e.g when showing biometric screen). Therefore, we can't rely on
+        // firstSceneKeyWindow() on this situation
+        let window =
+            UIApplication
             .sharedOrNil?
-            .firstSceneKeyWindow?
+            .windows
+            .filter { $0.isKeyWindow }
+            .first
+
+        return
+            window?
             .windowScene?
             .statusBarManager?
-            .statusBarFrame.height ?? 44
+            .statusBarFrame.height ?? 44.0 // TODO: 44 is outdated. have some logic to determine device and correct height?
     }
 
     public static var statusBarPlusNavBarHeight: CGFloat {
