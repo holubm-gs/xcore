@@ -29,13 +29,13 @@ extension UIAccessibility {
             self.element = tappedElement
         }
 
-        public mutating func focus() {
-            UIAccessibility.post(notification: .layoutChanged, argument: element)
+        public mutating func focus(notification: Notification = .layoutChanged) {
+            UIAccessibility.post(notification: notification, argument: element)
             element = nil
         }
 
-        public mutating func reset() {
-            UIAccessibility.post(notification: .screenChanged, argument: nil)
+        public mutating func reset(notification: Notification = .screenChanged) {
+            UIAccessibility.post(notification: notification, argument: nil)
             element = nil
         }
     }
