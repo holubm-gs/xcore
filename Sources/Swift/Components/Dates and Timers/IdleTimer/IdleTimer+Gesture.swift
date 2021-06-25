@@ -9,6 +9,13 @@ import UIKit
 // MARK: - Notification
 
 extension UIApplication {
+    /// Posted before the `didTimeOutUserInteractionNotification`.
+    ///
+    /// - See: `IdleTimer.setUserInteractionTimeout(duration:for:)`
+    public static var willTimeOutUserInteractionNotification: Notification.Name {
+        .init(#function)
+    }
+
     /// Posted after the user interaction timeout.
     ///
     /// - See: `IdleTimer.setUserInteractionTimeout(duration:for:)`
@@ -18,6 +25,14 @@ extension UIApplication {
 }
 
 extension NotificationCenter.Event {
+    /// Posted before the `didTimeOutUserInteractionNotification`.
+    ///
+    /// - See: `IdleTimer.setUserInteractionTimeout(duration:for:)`
+    @discardableResult
+    public func applicationWillTimeOutUserInteraction(_ callback: @escaping () -> Void) -> NSObjectProtocol {
+        observe(UIApplication.willTimeOutUserInteractionNotification, callback)
+    }
+
     /// Posted after the user interaction timeout.
     ///
     /// - See: `IdleTimer.setUserInteractionTimeout(duration:for:)`
@@ -51,18 +66,28 @@ extension IdleTimer {
 
 extension IdleTimer {
     final class WindowContainer {
-        private let timer: InternalTimer
+        private let mainTimer: InternalTimer
+        private let warningTimer: InternalTimer
 
         /// The timeout duration in seconds, after which idle timer notification is
         /// posted.
         var timeoutDuration: TimeInterval {
-            get { timer.timeoutDuration }
-            set { timer.timeoutDuration = newValue }
+            mainTimer.timeoutDuration
+        }
+
+        /// The timeout duration in seconds, before which the main timer notifiacation
+        /// is posted.
+        var warningDuration: TimeInterval {
+            warningTimer.timeoutDuration
         }
 
         init() {
-            timer = .init(timeoutAfter: 0) {
+            mainTimer = .init(timeoutAfter: 0) {
                 NotificationCenter.default.post(name: UIApplication.didTimeOutUserInteractionNotification, object: nil)
+            }
+
+            warningTimer = .init(timeoutAfter: 0) {
+                NotificationCenter.default.post(name: UIApplication.willTimeOutUserInteractionNotification, object: nil)
             }
         }
 
@@ -73,9 +98,30 @@ extension IdleTimer {
             }
 
             let newGesture = Gesture { [weak self] in
-                self?.timer.wake()
+                self?.mainTimer.wake()
+                self?.warningTimer.wake()
             }
             window.addGestureRecognizer(newGesture)
+        }
+
+        /// Configures timeout and warning timeout for the window container.
+        ///
+        /// - Parameters:
+        ///   - timeoutDuration: The TimeInterval which idle main timer.
+        ///   - warningDuration: The TimeInterval specifies duration before
+        ///      the main timer is called. Value should be lower then
+        ///      timeoutDuration.
+        func configure(timeoutDuration: TimeInterval, warningDuration: TimeInterval? = nil) {
+            self.mainTimer.timeoutDuration = timeoutDuration
+            if let warningDuration = warningDuration {
+                #if DEBUG
+                guard warningDuration < timeoutDuration else {
+                    fatalError("IdleTimer: warningDuration should be lower then timeoutDuration")
+                }
+                #endif
+
+                self.warningTimer.timeoutDuration = max(0, timeoutDuration - warningDuration)
+            }
         }
     }
 }
