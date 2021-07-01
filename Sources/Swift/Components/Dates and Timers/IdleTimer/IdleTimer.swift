@@ -18,16 +18,14 @@ extension IdleTimer {
     /// Updates existing or creates a new timeout gesture for given `window` object.
     ///
     /// You can observe the timeout event using
-    /// `UIApplication.didTimeOutUserInteractionNotification`.
-    public static func setUserInteractionTimeout(duration: TimeInterval? = nil, for window: UIWindow?) {
+    /// `UIApplication.willTimeOutUserInteractionNotification`
+    /// and `UIApplication.didTimeOutUserInteractionNotification`.
+    public static func setUserInteractionTimeout(duration: TimeInterval, warningDuration: TimeInterval? = nil, for window: UIWindow?) {
         guard let window = window else {
             return
         }
 
         windowContainer.add(window)
-
-        if let duration = duration {
-            windowContainer.timeoutDuration = duration
-        }
+        windowContainer.configure(timeoutDuration: duration, warningDuration: warningDuration)
     }
 }
