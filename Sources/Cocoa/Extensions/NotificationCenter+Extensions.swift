@@ -222,7 +222,7 @@ extension NotificationCenter.Event {
 
     @discardableResult
     public func accessibilityDifferentiateWithoutColorStatusDidChange(_ callback: @escaping () -> Void) -> NSObjectProtocol {
-        observe(Notification.Name(rawValue: UIAccessibility.differentiateWithoutColorDidChangeNotification), callback)
+        observe(Notification.Name(rawValue: UIAccessibility.differentiateWithoutColorDidChangeNotification.rawValue), callback)
     }
 
     // MARK: - UIContentSizeCategory
