@@ -38,7 +38,7 @@ extension Identifier where Type: UIButton {
 
 // MARK: - Main Configurations
 
-extension XcoreConfiguration where Type: UIButton {
+extension Xcore.Configuration where Type: UIButton {
     private static func configure(_ button: UIButton, _ id: Identifier) {
         UIButton.defaultAppearance._configure?(button, id as! UIButton.XcoreConfiguration.Identifier)
     }
@@ -119,7 +119,7 @@ extension XcoreConfiguration where Type: UIButton {
 
 // MARK: - Images Configurations
 
-extension XcoreConfiguration where Type: UIButton {
+extension UIButton.XcoreConfiguration where Type: UIButton {
     public static var leftArrow: Self {
         image(assetIdentifier: .arrowLeftIcon, alpha: 0.5).extend {
             $0.accessibilityIdentifier = "leftButton"
@@ -190,7 +190,7 @@ extension XcoreConfiguration where Type: UIButton {
     }
 
     public static func caret(
-        in configuration: XcoreConfiguration = .plain,
+        in configuration: UIButton.XcoreConfiguration = .plain,
         text: String,
         font: UIFont? = nil,
         textColor: UIColor? = nil,
@@ -215,7 +215,7 @@ extension XcoreConfiguration where Type: UIButton {
 
 // MARK: - Toggle Configurations
 
-extension XcoreConfiguration where Type: UIButton {
+extension Xcore.Configuration where Type: UIButton {
     public static var checkbox: Self {
         checkbox()
     }

@@ -6,7 +6,7 @@
 
 import UIKit
 
-extension XcoreConfiguration where Type: UIButton {
+extension Xcore.Configuration where Type: UIButton {
     public struct Attributes {
         public var font: UIFont?
         public var tintColor: UIColor?

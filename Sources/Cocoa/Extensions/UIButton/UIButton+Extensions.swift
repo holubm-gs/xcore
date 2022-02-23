@@ -105,7 +105,7 @@ extension UIButton {
 }
 
 extension UIButton {
-    public typealias XcoreConfiguration = Xcore.XcoreConfiguration<UIButton>
+    public typealias XcoreConfiguration = Xcore.Configuration<UIButton>
     @objc public dynamic static let defaultAppearance = DefaultAppearance()
 
     var defaultAppearance: DefaultAppearance {

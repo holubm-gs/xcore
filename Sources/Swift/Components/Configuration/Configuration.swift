@@ -29,7 +29,7 @@ import UIKit
 /// ```swift
 /// let headerLabel = UILabel(configuration: .header)
 /// ```
-public struct XcoreConfiguration<Type> {
+public struct Configuration<Type> {
     public typealias Identifier = Xcore.Identifier<Type>
     public let id: Identifier
     private let _configure: ((Type) -> Void)
@@ -51,7 +51,7 @@ public struct XcoreConfiguration<Type> {
     }
 }
 
-extension XcoreConfiguration: Equatable {
+extension Configuration: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
@@ -60,7 +60,7 @@ extension XcoreConfiguration: Equatable {
 // MARK: - Convenience UIKit Initializers
 
 extension UILabel {
-    public convenience init(text: String?, configuration: XcoreConfiguration<UILabel>) {
+    public convenience init(text: String?, configuration: Configuration<UILabel>) {
         self.init()
         self.text = text
         configuration.configure(self)
@@ -77,7 +77,7 @@ extension UILabel {
 public protocol ConfigurationInitializable { }
 
 extension ConfigurationInitializable where Self: UIView {
-    public init(configuration: XcoreConfiguration<Self>) {
+    public init(configuration: Configuration<Self>) {
         self.init()
         configuration.configure(self)
     }
@@ -87,7 +87,7 @@ extension UIView: ConfigurationInitializable { }
 extension UIBarButtonItem: ConfigurationInitializable { }
 
 extension TargetActionBlockRepresentable where Self: UIBarButtonItem {
-    public init(configuration: XcoreConfiguration<Self>, _ handler: ((_ sender: Self) -> Void)? = nil) {
+    public init(configuration: Configuration<Self>, _ handler: ((_ sender: Self) -> Void)? = nil) {
         self.init()
         configuration.configure(self)
         guard let handler = handler else { return }
@@ -97,7 +97,7 @@ extension TargetActionBlockRepresentable where Self: UIBarButtonItem {
 
 // MARK: - Built-in
 
-extension XcoreConfiguration {
+extension Configuration {
     public static var none: Self {
         .init(id: #function) { _ in }
     }
