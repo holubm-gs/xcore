@@ -25,20 +25,20 @@ extension UIButton {
     /// ```
     @objc(UIButtonDefaultAppearance)
     final public class DefaultAppearance: NSObject {
-        public var configuration: Configuration = .none
+        public var configuration: XcoreConfiguration = .none
         public var height: CGFloat = 50
         public var isHeightSetAutomatically = false
         public var highlightedAnimation: HighlightedAnimationOptions = .none
         /// The default attributes for the button configurations.
-        public var configurationAttributes = Configuration.AttributesStorage()
+        public var configurationAttributes = XcoreConfiguration.AttributesStorage()
 
         /// A boolean value indicating whether `configure` replaces existing
         /// configuration block call or extend it.
         ///
         /// The default value is `true`, meaning extend.
         public var shouldExtendExistingConfigureBlock = true
-        var _configure: ((UIButton, Configuration.Identifier) -> Void)?
-        public func configure(_ callback: @escaping (UIButton, Configuration.Identifier) -> Void) {
+        var _configure: ((UIButton, XcoreConfiguration.Identifier) -> Void)?
+        public func configure(_ callback: @escaping (UIButton, XcoreConfiguration.Identifier) -> Void) {
             guard
                 shouldExtendExistingConfigureBlock,
                 let existingConfigureBlock = _configure
@@ -105,7 +105,7 @@ extension UIButton {
 }
 
 extension UIButton {
-    public typealias Configuration = Xcore.Configuration<UIButton>
+    public typealias XcoreConfiguration = Xcore.Configuration<UIButton>
     @objc public dynamic static let defaultAppearance = DefaultAppearance()
 
     var defaultAppearance: DefaultAppearance {
@@ -157,7 +157,7 @@ extension UIButton {
     /// The configuration associated with the button.
     ///
     /// The default value is `.none`.
-    open var configuration: Configuration {
+    open var xcoreConfiguration: XcoreConfiguration {
         get { associatedObject(&AssociatedKey.configuration, default: defaultAppearance.configuration) }
         set {
             setAssociatedObject(&AssociatedKey.configuration, value: newValue)
@@ -170,9 +170,9 @@ extension UIButton {
         set { setAssociatedObject(&AssociatedKey.initialText, value: newValue) }
     }
 
-    public convenience init(text: String? = nil, configuration: Configuration) {
+    public convenience init(text: String? = nil, configuration: XcoreConfiguration) {
         self.init(frame: .zero)
-        self.configuration = configuration
+        self.xcoreConfiguration = configuration
         self.initialText = text
         commonInit()
     }
@@ -188,7 +188,7 @@ extension UIButton {
         observeHeightSetAutomaticallySetter = false
         contentEdgeInsets = UIEdgeInsets(horizontal: .defaultPadding)
         prepareForReuse()
-        apply(configuration)
+        apply(xcoreConfiguration)
         updateHeightConstraintIfNeeded()
         observeHeightSetAutomaticallySetter = true
     }

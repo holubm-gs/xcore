@@ -6,7 +6,7 @@
 
 import UIKit
 
-extension UIButton.Configuration {
+extension Xcore.Configuration where Type: UIButton {
     public struct Attributes {
         public var font: UIFont?
         public var tintColor: UIColor?
@@ -16,8 +16,6 @@ extension UIButton.Configuration {
         public var selectedColor: UIColor?
         public var disabledBackgroundColor: UIColor?
         public var cornerRadius: CGFloat?
-
-        fileprivate static let empty = Attributes()
     }
 
     public struct AttributesStorage: MutableAppliable {
@@ -30,7 +28,7 @@ extension UIButton.Configuration {
         /// - Parameter id: The identifier for which to return attributes.
         /// - Returns: The attributes for the identifier.
         public subscript(id: Identifier) -> Attributes {
-            get { storage[id] ?? .empty }
+            get { storage[id] ?? .init() }
             set { storage[id] = newValue }
         }
     }
@@ -60,12 +58,12 @@ extension Identifier where Type: UIButton {
         }
     }
 
-    private var attributes: UIButton.Configuration.Attributes {
+    private var attributes: UIButton.XcoreConfiguration.Attributes {
         get { UIButton.defaultAppearance.configurationAttributes[.init(rawValue: rawValue)] }
         set { UIButton.defaultAppearance.configurationAttributes[.init(rawValue: rawValue)] = newValue }
     }
 
-    private func attributes<Value>(_ keyPath: WritableKeyPath<UIButton.Configuration.Attributes, Value?>) -> Value? {
+    private func attributes<Value>(_ keyPath: WritableKeyPath<UIButton.XcoreConfiguration.Attributes, Value?>) -> Value? {
         guard let value = attributes[keyPath: keyPath] else {
             guard self != .base else {
                 return nil
