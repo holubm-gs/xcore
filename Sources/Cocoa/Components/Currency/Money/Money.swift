@@ -88,7 +88,7 @@ public struct Money: Equatable, Hashable, MutableAppliable {
     public var shouldSuperscriptMinorUnit: Bool
 
     public var accessibilityLabel: String {
-        formatter.string(from: amount, style: style)
+        formatter.string(from: amount, style: style, sign: sign)
     }
 }
 
@@ -187,8 +187,8 @@ extension Money {
         }
     }
 
-    public func signed() -> Self {
-        sign(.default)
+    public func signed(_ signType: Money.Sign = .default) -> Self {
+        sign(signType)
     }
 
     /// Signed positive amount with (`"+"`), minus (`""`) and `0` amount omits
