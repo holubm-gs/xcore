@@ -102,6 +102,10 @@ public enum ServiceLocator {
         services[key] = service
     }
 
+    public static func clear() {
+        services = [:]
+    }
+
     fileprivate static func resolve<T>() -> T {
         let key = ObjectIdentifier(T.self)
 
